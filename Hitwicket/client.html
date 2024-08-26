@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turn based Chess Game</title>
+    <!--This is the css code for the user interface design-->
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ddd;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(5, 50px);
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            background-color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        #txtGameId {
+            margin-bottom: 10px;
+            padding: 5px;
+            font-size: 16px;
+            width: 150px;
+            text-align: center;
+        }
+
+        #moveInput {
+            margin-bottom: 10px;
+            padding: 5px;
+            font-size: 16px;
+            width: 150px;
+            text-align: center;
+        }
+
+        button {
+            padding: 5px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #777;
+        }
+    </style>
+</head>
+<!--this section contains the game title and board setup with input controls for user intercation-->
+<body>
+    <h1>Turn based Chess Game</h1>
+
+    <div id="controls">
+        <input type="text" id="txtGameId" placeholder="Enter Game ID to Join">
+        <button id="btnCreate">New Game</button>
+        <button id="btnJoin">Join Game</button>
+
+        <div id="board"></div>
+        
+        <input type="text" id="moveInput" placeholder="Move (e.g., P1:F)">
+        <button id="moveButton">Submit Move</button>
+    </div>
+<!--establishes the websocket connection to the server side for real time communication with the client-->
+    <script>
+
+        const ws = new WebSocket("ws://localhost:9090");
+        let clientId = null;
+        let gameId = null;
+//listens and takes the messahe from the server and process them based on the methods recieved    
+        ws.onmessage = message => {
+            const response = JSON.parse(message.data);
+            //connect for connecting the two players
+            if (response.method === "connect") {
+                clientId = response.clientId;
+            }
+            //this for creating the game id
+            //actually this game id first created in the developer tools so i thought of giving an alert when the game id is created instead of opening the game developers tools and copying the code from there
+            if (response.method === "create") {
+                gameId = response.game.id;
+                updateBoard(response.game.state);
+                alert("Game created. Game ID: " + gameId);
+            }
+            //the id which we got when it alerts now open the new tab and paste the game id in thenew tab and press join to join the game 
+            if (response.method === "join") {
+                gameId = response.game.id;
+                updateBoard(response.game.state);
+                alert("Joined game with ID: " + gameId);
+            }
+            //this function is for updating the blocks on the game board
+            if (response.method === "update") {
+                updateBoard(response.game.state);
+            }
+            //this is know which player play like who's turn to play
+            if (response.method === "turn") {
+                document.getElementById("moveInput").placeholder = "Player " + (response.currentPlayer === "A" ? "A" : "B") + " turn";
+            }
+            //this results after all the blocks of one player is smashed by the other player
+            if (response.method === "win") {
+                alert("Player " + (response.winner === "A" ? "A" : "B") + " wins! You can start the new game");
+            }
+        };
+    //this below code helps to create a new game when the user clicks on the new game button 
+        document.getElementById("btnCreate").onclick = () => {
+            const payLoad = {
+                "method": "create",
+                "clientId": clientId
+            };
+            ws.send(JSON.stringify(payLoad));
+        };
+    //this below code hels to join the the game that was created based on the existing game id
+        document.getElementById("btnJoin").onclick = () => {
+            gameId = document.getElementById("txtGameId").value;
+            if (!gameId) {
+                alert("Please enter a Game ID to join.");
+                return;
+            }
+            const payLoad = {
+                "method": "join",
+                "clientId": clientId,
+                "gameId": gameId
+            };
+            ws.send(JSON.stringify(payLoad));
+        };
+    //this button send request to move a block when ever the user submits their move through the input prompt that was given
+        document.getElementById("moveButton").onclick = () => {
+            const moveInput = document.getElementById("moveInput").value;
+            const payLoad = {
+                "method": "play",
+                "clientId": clientId,
+                "gameId": gameId,
+                "move": moveInput
+            };
+            ws.send(JSON.stringify(payLoad));
+            document.getElementById("moveInput").value = '';
+        };
+    //the code updates the visual presentation of the game board based on the current state recieved form the server side
+        function updateBoard(state) {
+            const board = document.getElementById("board");
+            board.innerHTML = "";
+            state.forEach(row => {
+                row.forEach(cell => {
+                    const cellDiv = document.createElement("div");
+                    cellDiv.classList.add("cell");
+                    cellDiv.innerText = cell || "";
+                    board.appendChild(cellDiv);
+                });
+            });
+        }
+    </script>
+    
+</body>
+</html>
