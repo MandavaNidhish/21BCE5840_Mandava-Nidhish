@@ -26,4 +26,28 @@ This is a simple web-based game, turn-based chess game where two players can pla
 4. Once both the players have joined, they can start playing the game by entering their moves in the prompt given in the client page.
 5. The input move format should be in the format "Piece:Direction". For example 'P1:F' this means pawn-1 moves 1 step forward or 'H2:BL' this means Hero-2 moves 2 steps diagonally backward left and press "Submit" button for submitting the move.
 6. The board updates in real time as player make their moves, and in the prompt box where we enter the moves  it displays whose turn it is.
-7. Once all the blocks of the player got smashed by the other players block then we get message that 'Player-? won the game and you can start the next (or) new game'. 
+7. Once all the blocks of the player got smashed by the other players block then we get message that 'Player-? won the game and you can start the next (or) new game'.
+
+### Sample photos for the process:
+
+1. Press New Game button for getting the unique Game ID.
+![WhatsApp Image 2024-08-27 at 01 35 16_8160c53d](https://github.com/user-attachments/assets/8795ec26-86b3-475f-8531-f796b7604402)
+2. Join the game from another tab copy pasting the Game ID which we got in the previous step.
+![WhatsApp Image 2024-08-27 at 01 36 21_8343487c](https://github.com/user-attachments/assets/5e475f38-9885-4c95-9f01-cbbb94f5a1c8)
+3. Let's split the screen into two tabs to play the game simultaneously.
+![WhatsApp Image 2024-08-27 at 01 37 25_4aff6d2a](https://github.com/user-attachments/assets/a60c0c28-4051-4a23-8db7-9c5b9d2b20c5)
+4. Now let's start with the pawn move 'P1:B'. The 'A-P1' moves in the below way.
+![WhatsApp Image 2024-08-27 at 01 37 54_2a6f1f7a](https://github.com/user-attachments/assets/2d7fef09-94ca-499c-bbb9-24c0dd79f57d)
+5. Next let's see Hero-1 move 'H1:F'. The 'B-H1' moves in the below way.
+![WhatsApp Image 2024-08-27 at 01 38 37_3e2602c0](https://github.com/user-attachments/assets/0cf9d738-bc23-43b5-879b-69fb48114d8e)
+6. Let's see pawn move again 'P1:B'. The 'A-P1' moves in the below way.
+![WhatsApp Image 2024-08-27 at 01 39 24_c9149e1e](https://github.com/user-attachments/assets/c9eda262-41c1-4df4-af7b-4f878514bc2f)
+7. This is the Hero-2 move 'H2:FR'. The 'B-H2' moves in the below way.
+![WhatsApp Image 2024-08-27 at 01 40 19_617683f4](https://github.com/user-attachments/assets/516b32c7-3c7f-4ee7-afe0-73923fc68bd8)
+8. Finally the winner one, this comes when any of the player kills other player blocks using theirs and it results that Player-? won the game and you can start the next (or) new game.
+![WhatsApp Image 2024-08-27 at 02 01 30_8e453b34](https://github.com/user-attachments/assets/ae1d6015-9110-4fb0-abb1-247ae95262a3)
+
+
+
+
+
